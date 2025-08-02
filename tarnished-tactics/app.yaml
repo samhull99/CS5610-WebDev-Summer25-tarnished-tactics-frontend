@@ -1,8 +1,0 @@
-runtime: nodejs20
-
-env_variables:
-  REACT_APP_API_URL: "https://tarnished-tactics-backend.uc.r.appspot.com"
-
-automatic_scaling:
-  min_instances: 0
-  max_instances: 5
