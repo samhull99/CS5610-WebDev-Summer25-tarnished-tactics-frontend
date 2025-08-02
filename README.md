@@ -1,5 +1,7 @@
 TARNISHED TACTICS FRONTEND - TODAY'S FEATURES
 
+Deployed frontend: https://tarnished-tactics-frontend.uc.r.appspot.com/
+
 CORE STRUCTURE
 - React app with Elden Ring-themed styling (dark/gold colors)
 - Component-based architecture with proper file organization
