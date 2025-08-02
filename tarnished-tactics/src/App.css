@@ -1,0 +1,160 @@
+
+.app {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  color: white;
+}
+
+.header {
+  text-align: center;
+  padding: 2rem 0;
+  background-color: #2a2a2a;
+  border-bottom: 4px solid #fbbf24;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #fbbf24;
+  margin: 0;
+}
+
+.navbar {
+  background-color: #374151;
+  padding: 1rem 0;
+  border-bottom: 1px solid #4b5563;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.nav-button {
+  padding: 0.5rem 1rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #fbbf24;
+  color: #1a1a1a;
+}
+
+.nav-button.active {
+  background-color: #fbbf24;
+  color: #1a1a1a;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.home-page {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.home-page h1 {
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+/* Page styles */
+.builds-page, .guides-page {
+  padding: 2rem;
+}
+
+.builds-page h1, .guides-page h1 {
+  color: #fbbf24;
+  margin-bottom: 2rem;
+}
+
+.builds-list, .guides-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.build-item, .guide-item {
+  background-color: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+}
+
+.build-item h3, .guide-item h3 {
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+.stats ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+}
+
+.stats li {
+  background-color: #374151;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.equipment, .content {
+  margin-top: 1rem;
+}
+
+.equipment h4, .content h4, .stats h4 {
+  color: #d1d5db;
+  margin-bottom: 0.5rem;
+}
+
+.tags {
+  margin-top: 1rem;
+  color: #9ca3af;
+}
+
+.meta {
+  margin-top: 1rem;
+  color: #6b7280;
+}
+
+.error {
+  color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .nav-container {
+    gap: 1.5rem;
+  }
+  
+  .nav-button {
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .builds-page, .guides-page {
+    padding: 1rem;
+  }
+
+  .stats ul {
+    grid-template-columns: 1fr;
+  }
+}
