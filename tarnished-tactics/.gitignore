@@ -8,10 +8,16 @@
 # testing
 /coverage
 
+# locks
+package-lock.json
+
 # production
 /build
+.gcloudignore
+app.yaml
 
 # misc
+.env
 .DS_Store
 .env.local
 .env.development.local
