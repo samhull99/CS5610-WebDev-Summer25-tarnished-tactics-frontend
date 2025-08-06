@@ -23,6 +23,5 @@ API INTEGRATION
 
 DEPLOYMENT
 - Google Cloud App Engine ready
-- Responsive design for mobile/desktop
 
 STATUS: Full-stack app working with live backend connection
