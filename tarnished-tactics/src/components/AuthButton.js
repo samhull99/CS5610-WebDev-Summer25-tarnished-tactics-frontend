@@ -7,8 +7,8 @@ function AuthButton() {
   const googleButtonRef = useRef(null);
 
   useEffect(() => {
-    // Render Google Sign-In button when initialized and user is not signed in
-    if (isInitialized && !user && !loading && window.google) {
+    // Only render Google button when component is mounted and conditions are met
+    if (isInitialized && !user && !loading && window.google && googleButtonRef.current) {
       renderGoogleButton();
     }
   }, [isInitialized, user, loading]);
@@ -17,7 +17,7 @@ function AuthButton() {
     if (googleButtonRef.current && window.google) {
       // Clear any existing button
       googleButtonRef.current.innerHTML = '';
-      
+     
       // Render the new Google Identity Services button
       window.google.accounts.id.renderButton(
         googleButtonRef.current,
@@ -57,13 +57,14 @@ function AuthButton() {
     return <div className="auth-loading">Loading...</div>;
   }
 
+  // Show user info and sign out button when signed in
   if (user) {
     return (
       <div className="auth-container">
         <div className="user-info">
-          <img 
-            src={user.picture} 
-            alt={user.name} 
+          <img
+            src={user.picture}
+            alt={user.name}
             className="user-avatar"
           />
           <span className="user-name">{user.name}</span>
@@ -75,14 +76,15 @@ function AuthButton() {
     );
   }
 
+  // Show sign-in options when not signed in
   return (
     <div className="sign-in-container">
       {/* Google's rendered button */}
       <div ref={googleButtonRef} className="google-signin-button" />
-      
+     
       {/* Fallback manual button */}
       {(!window.google || isSigningIn) && (
-        <button 
+        <button
           onClick={handleManualSignIn}
           disabled={isSigningIn}
           className="auth-button sign-in manual"

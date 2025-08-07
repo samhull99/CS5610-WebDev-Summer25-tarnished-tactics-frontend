@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import BuildCreator from './BuildCreator';
 
@@ -8,6 +9,7 @@ function MyBuildsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingBuild, setEditingBuild] = useState(null);
   const [view, setView] = useState('grid'); // 'grid' or 'list'
 
   useEffect(() => {
@@ -39,7 +41,13 @@ function MyBuildsPage() {
 
   const handleBuildCreated = (newBuild) => {
     setShowCreateForm(false);
+    setEditingBuild(null);
     fetchUserBuilds(); // Refresh the list
+  };
+
+  const handleEditBuild = (build) => {
+    setEditingBuild(build);
+    setShowCreateForm(true);
   };
 
   const handleDeleteBuild = async (buildId) => {
@@ -84,7 +92,11 @@ function MyBuildsPage() {
       <div className="my-builds-page">
         <BuildCreator 
           onBuildCreated={handleBuildCreated}
-          onCancel={() => setShowCreateForm(false)}
+          onCancel={() => {
+            setShowCreateForm(false);
+            setEditingBuild(null);
+          }}
+          editingBuild={editingBuild}
         />
       </div>
     );
@@ -145,12 +157,29 @@ function MyBuildsPage() {
           ) : (
             <div className={`builds-container ${view}`}>
               {builds.map((build) => (
-                <div key={build._id} className="build-card">
+                <div key={build._id} className="build-card clickable-card">
                   <div className="build-header">
-                    <h3 className="build-name">{build.name}</h3>
+                    <h3 className="build-name">
+                      <Link to={`/builds/${build._id}`} className="build-name-link">
+                        {build.name}
+                      </Link>
+                    </h3>
                     <div className="build-actions">
                       <button 
-                        onClick={() => handleDeleteBuild(build._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditBuild(build);
+                        }}
+                        className="edit-button"
+                        title="Edit build"
+                      >
+                        ✏️
+                      </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteBuild(build._id);
+                        }}
                         className="delete-button"
                         title="Delete build"
                       >

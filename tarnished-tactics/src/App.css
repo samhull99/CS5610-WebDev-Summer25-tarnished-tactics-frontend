@@ -6,12 +6,34 @@
 }
 
 .header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 2rem;
-  background-color: #2a2a2a;
   border-bottom: 4px solid #fbbf24;
+  /* background-image: url('/images/ER_Location_Shaman_Village.png'); */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 120px; 
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(42, 42, 42, 0.5);
+  z-index: 1;
+}
+
+.title-section,
+.header-auth {
+  position: relative;
+  z-index: 2;
 }
 
 .title-link {
@@ -19,12 +41,15 @@
 }
 
 .title {
+  font-family: 'Eagle Lake', serif;
   font-size: 3rem;
-  font-weight: bold;
+  font-weight: normal; /* Eagle Lake only has one weight */
   color: #fbbf24;
   margin: 0;
   cursor: pointer;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
+
 
 .title:hover {
   color: #f59e0b;
@@ -119,9 +144,10 @@
 }
 
 .nav-button {
+  font-family: 'Eagle Lake', serif;
   padding: 0.5rem 1rem;
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: normal;
   border: none;
   border-radius: 0.25rem;
   background: transparent;
@@ -140,6 +166,27 @@
 .nav-button.active {
   background-color: #fbbf24;
   color: #1a1a1a;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .title-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .tagline {
+    font-size: 1rem;
+  }
+  
+  .nav-button {
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+  }
 }
 
 .main-content {
@@ -168,13 +215,13 @@
 }
 
 /* My Builds Page */
-.my-builds-page {
+.my-builds-page, .builds-page {
   padding: 2rem;
 }
 
 .page-header {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
   flex-wrap: wrap;
@@ -201,6 +248,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .create-button:hover {
@@ -340,6 +389,25 @@
 .visibility.private {
   color: #f59e0b;
   font-size: 0.875rem;
+}
+
+/* Build type indicators */
+.build-type.preset {
+  background-color: #7c3aed;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.build-type.user {
+  background-color: #059669;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .build-description {
@@ -636,11 +704,11 @@
 }
 
 /* Original page styles */
-.builds-page, .guides-page {
+.guides-page {
   padding: 2rem;
 }
 
-.builds-page h1, .guides-page h1 {
+.guides-page h1 {
   color: #fbbf24;
   margin-bottom: 2rem;
 }
@@ -769,6 +837,565 @@
   }
 
   .build-stats-summary {
+    justify-content: center;
+  }
+}
+
+/* Build Detail Page Styles */
+.build-detail-page {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.build-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #374151;
+}
+
+.breadcrumb {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.breadcrumb a {
+  color: #fbbf24;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: #f59e0b;
+}
+
+.breadcrumb span {
+  color: #d1d5db;
+}
+
+.build-detail-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.delete-button-large {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delete-button-large:hover {
+  background-color: #c82333;
+}
+
+.build-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.build-info-section {
+  background-color: #2a2a2a;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+}
+
+.build-title {
+  color: #fbbf24;
+  font-size: 2.5rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: bold;
+}
+
+.build-meta-large {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.build-class-large {
+  background-color: #374151;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.build-level-large {
+  background-color: #1f2937;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.visibility-large.public {
+  color: #10b981;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background-color: rgba(16, 185, 129, 0.1);
+  border-radius: 0.5rem;
+}
+
+.visibility-large.private {
+  color: #f59e0b;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background-color: rgba(245, 158, 11, 0.1);
+  border-radius: 0.5rem;
+}
+
+.build-type-large.preset {
+  background-color: #7c3aed;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.build-type-large.user {
+  background-color: #059669;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.build-description-large {
+  margin-top: 1rem;
+}
+
+.build-description-large h3 {
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.build-description-large p {
+  color: #d1d5db;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.build-section {
+  background-color: #2a2a2a;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+}
+
+.build-section h2 {
+  color: #fbbf24;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.75rem;
+  border-bottom: 2px solid #374151;
+  padding-bottom: 0.5rem;
+}
+
+.stats-detailed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-detailed {
+  background-color: #374151;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  border: 2px solid #4b5563;
+  transition: all 0.3s ease;
+}
+
+.stat-detailed:hover {
+  border-color: #fbbf24;
+}
+
+.stat-name {
+  display: block;
+  color: #d1d5db;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value-large {
+  display: block;
+  color: #fbbf24;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.equipment-category {
+  margin-bottom: 2rem;
+}
+
+.equipment-category:last-child {
+  margin-bottom: 0;
+}
+
+.equipment-category h3 {
+  color: #fbbf24;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #374151;
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.equipment-slot {
+  background-color: #1f2937;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #374151;
+}
+
+.equipment-slot h4 {
+  color: #fbbf24;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.equipment-slot p {
+  color: #d1d5db;
+  margin: 0;
+  font-weight: 500;
+}
+
+.equipment-slot ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.equipment-slot li {
+  color: #d1d5db;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.spells-list {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.spell-item {
+  background-color: #1f2937;
+  color: #d1d5db;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: 1px solid #374151;
+}
+
+.tags-large {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tag-large {
+  background-color: #374151;
+  color: #d1d5db;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: 1px solid #4b5563;
+  transition: all 0.3s ease;
+}
+
+.tag-large:hover {
+  border-color: #fbbf24;
+}
+
+.build-detail-footer {
+  background-color: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  margin-top: 1rem;
+}
+
+.build-dates p {
+  color: #9ca3af;
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.build-dates strong {
+  color: #d1d5db;
+}
+
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+}
+
+.error-state h2 {
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+.error-state p {
+  color: #d1d5db;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .build-detail-page {
+    padding: 1rem;
+  }
+  
+  .build-detail-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .build-detail-actions {
+    justify-content: center;
+  }
+  
+  .build-title {
+    font-size: 2rem;
+  }
+  
+  .build-meta-large {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .stats-detailed {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .equipment-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .build-info-section,
+  .build-section {
+    padding: 1.5rem;
+  }
+}
+
+/* Clickable Build Cards */
+.build-card.clickable-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.build-card.clickable-card:hover {
+  border-color: #fbbf24;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.build-name-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.build-name-link:hover {
+  color: #f59e0b;
+}
+
+.build-actions button {
+  position: relative;
+  z-index: 10;
+}
+
+.title-section {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.tagline {
+  font-family: 'Eagle Lake', serif;
+  color: #d1d5db;
+  font-size: 1.25rem;
+  font-weight: normal;
+  opacity: 0.8;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.song-title {
+  font-family: 'Eagle Lake', serif;
+  color: #d1d5db;
+  font-size: 1.0rem;
+  font-weight: normal;
+  opacity: 0.8;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 768px) {
+  .title-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .tagline {
+    font-size: 1rem;
+  }
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #3b82f6;
+}
+
+
+.build-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #3b82f6;
+}
+
+.edit-button-large {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-button-large:hover {
+  background-color: #2563eb;
+}
+
+.build-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.build-detail-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Add this to your App.css - Background Music Control Styles */
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.background-music-control {
+  display: flex;
+  align-items: center;
+}
+
+.music-toggle-button {
+  background: rgba(251, 191, 36, 0.9);
+  border: 2px solid #fbbf24;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.music-toggle-button:hover {
+  background: rgba(245, 158, 11, 1);
+  border-color: #f59e0b;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+.music-toggle-button:active {
+  transform: scale(0.95);
+}
+
+/* Ensure proper spacing in header */
+.header-auth {
+  min-width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .music-toggle-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .header-auth {
+    min-width: auto;
     justify-content: center;
   }
 }

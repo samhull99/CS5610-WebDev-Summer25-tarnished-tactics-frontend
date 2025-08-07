@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 
 const STARTING_CLASSES = [
@@ -18,10 +18,11 @@ const EQUIPMENT_SLOTS = {
   talismans: []
 };
 
-function BuildCreator({ onBuildCreated, onCancel }) {
+function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const isEditing = editingBuild !== null;
   
   const [buildData, setBuildData] = useState({
     name: '',
@@ -45,6 +46,42 @@ function BuildCreator({ onBuildCreated, onCancel }) {
   });
 
   const [tagInput, setTagInput] = useState('');
+
+  // Load existing build data when editing
+  useEffect(() => {
+    if (isEditing && editingBuild) {
+      setBuildData({
+        name: editingBuild.name || '',
+        description: editingBuild.description || '',
+        class: editingBuild.class || 'Vagabond',
+        level: editingBuild.level || 10,
+        stats: {
+          vigor: editingBuild.stats?.vigor || 10,
+          mind: editingBuild.stats?.mind || 10,
+          endurance: editingBuild.stats?.endurance || 10,
+          strength: editingBuild.stats?.strength || 10,
+          dexterity: editingBuild.stats?.dexterity || 10,
+          intelligence: editingBuild.stats?.intelligence || 10,
+          faith: editingBuild.stats?.faith || 10,
+          arcane: editingBuild.stats?.arcane || 10
+        },
+        equipment: {
+          rightHand: editingBuild.equipment?.rightHand || [],
+          leftHand: editingBuild.equipment?.leftHand || [],
+          armor: {
+            helmet: editingBuild.equipment?.armor?.helmet || '',
+            chest: editingBuild.equipment?.armor?.chest || '',
+            gauntlets: editingBuild.equipment?.armor?.gauntlets || '',
+            legs: editingBuild.equipment?.armor?.legs || ''
+          },
+          talismans: editingBuild.equipment?.talismans || []
+        },
+        spells: editingBuild.spells || [],
+        isPublic: editingBuild.isPublic !== undefined ? editingBuild.isPublic : true,
+        tags: editingBuild.tags || []
+      });
+    }
+  }, [isEditing, editingBuild]);
 
   const handleInputChange = (field, value) => {
     setBuildData(prev => ({
@@ -109,7 +146,7 @@ function BuildCreator({ onBuildCreated, onCancel }) {
     e.preventDefault();
     
     if (!user) {
-      setError('You must be signed in to create builds');
+      setError('You must be signed in to save builds');
       return;
     }
 
@@ -130,17 +167,30 @@ function BuildCreator({ onBuildCreated, onCancel }) {
         level: calculateTotalLevel()
       };
 
-      const response = await fetch(`${API_URL}/api/v1/builds`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(buildPayload)
-      });
+      let response;
+      if (isEditing) {
+        // Update existing build
+        response = await fetch(`${API_URL}/api/v1/builds/${editingBuild._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(buildPayload)
+        });
+      } else {
+        // Create new build
+        response = await fetch(`${API_URL}/api/v1/builds`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(buildPayload)
+        });
+      }
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create build');
+        throw new Error(errorData.error || `Failed to ${isEditing ? 'update' : 'create'} build`);
       }
 
       const result = await response.json();
@@ -149,27 +199,29 @@ function BuildCreator({ onBuildCreated, onCancel }) {
         onBuildCreated(result);
       }
       
-      // Reset form
-      setBuildData({
-        name: '',
-        description: '',
-        class: 'Vagabond',
-        level: 10,
-        stats: {
-          vigor: 10,
-          mind: 10,
-          endurance: 10,
-          strength: 10,
-          dexterity: 10,
-          intelligence: 10,
-          faith: 10,
-          arcane: 10
-        },
-        equipment: { ...EQUIPMENT_SLOTS },
-        spells: [],
-        isPublic: true,
-        tags: []
-      });
+      // Reset form if creating new build
+      if (!isEditing) {
+        setBuildData({
+          name: '',
+          description: '',
+          class: 'Vagabond',
+          level: 10,
+          stats: {
+            vigor: 10,
+            mind: 10,
+            endurance: 10,
+            strength: 10,
+            dexterity: 10,
+            intelligence: 10,
+            faith: 10,
+            arcane: 10
+          },
+          equipment: { ...EQUIPMENT_SLOTS },
+          spells: [],
+          isPublic: true,
+          tags: []
+        });
+      }
       
     } catch (err) {
       setError(err.message);
@@ -181,16 +233,21 @@ function BuildCreator({ onBuildCreated, onCancel }) {
   if (!user) {
     return (
       <div className="build-creator">
-        <p>Please sign in to create builds.</p>
+        <p>Please sign in to {isEditing ? 'edit' : 'create'} builds.</p>
       </div>
     );
   }
 
   return (
     <div className="build-creator">
-      <h2>Create New Build</h2>
+      <h2>{isEditing ? 'Edit Build' : 'Create New Build'}</h2>
       
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message">
+          {error}
+          <button onClick={() => setError(null)}>×</button>
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="build-form">
         {/* Basic Info */}
@@ -385,7 +442,7 @@ function BuildCreator({ onBuildCreated, onCancel }) {
 
         <div className="form-actions">
           <button type="submit" disabled={loading} className="submit-button">
-            {loading ? 'Creating Build...' : 'Create Build'}
+            {loading ? `${isEditing ? 'Updating' : 'Creating'} Build...` : `${isEditing ? 'Update' : 'Create'} Build`}
           </button>
           {onCancel && (
             <button type="button" onClick={onCancel} className="cancel-button">

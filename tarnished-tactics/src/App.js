@@ -6,7 +6,9 @@ import AuthButton from './components/AuthButton';
 import BuildsPage from './components/BuildsPage';
 import GuidesPage from './components/GuidesPage';
 import MyBuildsPage from './components/MyBuildsPage';
+import BuildDetailPage from './components/BuildDetailPage';
 import { useAuth } from './components/AuthContext';
+import BackgroundMusic from './components/BackgroundMusic';
 
 function Navigation() {
   const { isAuthenticated } = useAuth();
@@ -48,6 +50,7 @@ function HomePage() {
 
   return (
     <div className="home-page">
+      <p>"What was her prayer? Her wish, her confession? There is no one left to answer, and Marika never returned home again."</p>
       <h1>Welcome to Tarnished Tactics</h1>
       <p>Your ultimate Elden Ring build generator and guide resource.</p>
       {isAuthenticated && (
@@ -71,14 +74,26 @@ function AppContent() {
   return (
     <div className="app">
       {/* Header */}
-      <header className="header">
-        <Link to="/" className="title-link">
-          <h1 className="title">Tarnished Tactics</h1>
-        </Link>
-        <div className="header-auth">
-          <AuthButton />
-        </div>
-      </header>
+<header 
+  className="header"
+  style={{
+    backgroundImage: 'url(/images/ER_Location_Shaman_Village.png)'
+  }}
+>
+  <div className="title-section">
+    <Link to="/" className="title-link">
+      <h1 className="title">Tarnished Tactics</h1>
+    </Link>
+    <span className="tagline">Dodge and hit.</span>
+  </div>
+<div className="header-controls">
+  <span className="song-title">Shaman Village OST</span>
+  <BackgroundMusic audioSrc="/audio/shamanvillage.mp3" />
+  <div className="header-auth">
+    <AuthButton />
+  </div>
+</div>
+</header>
 
       {/* Navigation */}
       <Navigation />
@@ -88,6 +103,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/builds" element={<BuildsPage />} />
+          <Route path="/builds/:buildId" element={<BuildDetailPage />} />
           <Route path="/guides" element={<GuidesPage />} />
           <Route path="/my-builds" element={<MyBuildsPage />} />
           {/* 404 Route */}
