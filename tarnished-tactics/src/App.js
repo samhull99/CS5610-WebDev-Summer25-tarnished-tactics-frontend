@@ -5,6 +5,7 @@ import { AuthProvider } from './components/AuthContext';
 import AuthButton from './components/AuthButton';
 import BuildsPage from './components/BuildsPage';
 import GuidesPage from './components/GuidesPage';
+import GuideDetailPage from './components/GuideDetailPage'; // Add this import
 import MyBuildsPage from './components/MyBuildsPage';
 import BuildDetailPage from './components/BuildDetailPage';
 import { useAuth } from './components/AuthContext';
@@ -105,6 +106,7 @@ function AppContent() {
           <Route path="/builds" element={<BuildsPage />} />
           <Route path="/builds/:buildId" element={<BuildDetailPage />} />
           <Route path="/guides" element={<GuidesPage />} />
+          <Route path="/guides/:guideId" element={<GuideDetailPage />} />
           <Route path="/my-builds" element={<MyBuildsPage />} />
           {/* 404 Route */}
           <Route path="*" element={
