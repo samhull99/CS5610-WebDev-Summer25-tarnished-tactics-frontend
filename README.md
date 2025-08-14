@@ -1,14 +1,13 @@
 # GRADER NOTES
 User interface with data by at least 2 CRUD operations (create, read, update, delete) for at least one database table
-- Create, read, update, and delete for builds and guides databases.
-At least 3 different UI routes (appearing to the user as different pages)
-- Home page, builds page, build detail page, build creator, guides page, guide detail page, guide creator, my builds page (when signed in)
-At least one Bootstrap UI component not featured in the demo application
-- Used badge Bootstrap UI component, however I mostly used custom CSS, and added background music.
-Different layout and design from the demo application; it should not look like an obvious clone
-- Self evident
-3rd party library for React (not including React DnD, unless its use is completely different from the use in the demo project)
-- framer-motion animation library for transitioning between pages and hovering over build/guide cards
+- Create, read, update, and delete for builds and guides databases. At least 3 different UI routes (appearing to the user as different pages)
+Home page, builds page, build detail page, build creator, guides page, guide detail page, guide creator, my builds page (when signed in)
+- At least one Bootstrap UI component not featured in the demo application
+Used badge Bootstrap UI component, however I mostly used custom CSS, and added background music.
+- Different layout and design from the demo application; it should not look like an obvious clone
+Self evident
+- 3rd party library for React (not including React DnD, unless its use is completely different from the use in the demo project)
+framer-motion animation library for transitioning between pages and hovering over build/guide cards
 
 # Tarnished Tactics - Feature Overview
 Please see next section to see iteration 3 specific features.
