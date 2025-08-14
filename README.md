@@ -1,26 +1,77 @@
-**TARNISHED TACTICS - ITERATION 3 PLANNED FEATURES**
+# Tarnished Tactics - Feature Overview
+Please see next section to see iteration 3 specific features.
+## 1. Browse Builds
+**Feature Description:**  
+Comprehensive build discovery system with advanced filtering and viewing options.
 
-IMPROVED HOMEPAGE
-- Homepage displays highlights of websites and allows user action rather than being just a landing page
+**How It Works:**
+- **Public Build Library:** Access community-created builds and preset builds from the development team.
+- **Dual View Modes:** Switch between grid view (visual cards) and list view (compact details) for optimal browsing.
+- **Build Type Indicators:** Visual badges distinguish between:
+  - 👤 **User Build**
+  - 📋 **Preset**
+- **Detailed Build Cards:** Display starting class, level, key stats (VIG, STR, DEX, INT, FAI), main weapon, and timestamps.
+- **Clickable Navigation:** Links to detailed build pages for in-depth analysis of stats, equipment, and strategies.
+- **Real-time Updates:** Library refreshes automatically with latest community contributions.
 
-GUIDE GENERATION
-- Guide generation based on build the user creates
-- Overall gameplay strategy generation, pathing, combat strategy
-- Individual boss guides per build
-- Embedded videos
-- Lore tidbits on guide pages
+---
 
-BUILD GENERATOR QUIZ
-- Option for user to take a quiz to generate build based on answering questions regarding preferred playstyle and more
+## 2. Read Guides
+**Feature Description:**  
+Comprehensive strategy guide system providing gameplay advice and build optimization tips.
 
-BUILD CREATION IMPROVEMENTS
-- Photos for corresponding gear
-- Selection for weapons, armor, and talismans rather than manual input
-- Choosing starter class correctly changes starting stats
-- Ability to rate other builds, average rating will be publicly visible
+**How It Works:**
+- **Community Guide Library:** Access user-generated guides for different playstyles and strategies.
+- **AI-Generated Content:** Intelligent system analyzes build data to create tailored strategies.
+- **Categorized Content:** Organize by difficulty, build type, and gameplay focus (PvP, PvE, boss strategies).
+- **Associated Build Integration:** See how guides connect directly to relevant builds.
+- **Rich Content Support:** Include text formatting, equipment recommendations, and step-by-step progression.
+- **Search & Discovery:** Filter guides by categories and player needs.
 
-USER FORUM
-- Simple user form for community discussion
+---
+
+## 3. Create Your Own
+**Feature Description:**  
+Build creation and management with detailed stat tracking and customization.
+
+**How It Works:**
+- **Interactive Build Creator:** Real-time level calculation while creating custom builds.
+- **Dynamic Stat Allocation:** Input all eight core stats (Vigor, Mind, Endurance, Strength, Dexterity, Intelligence, Faith, Arcane).
+- **Equipment Tracking:** Manage weapons, armor sets, and talisman configurations.
+- **Tag System:** Add custom tags for categorization and searching.
+- **Privacy Controls:** Toggle public or private visibility.
+- **Edit & Update:** Full CRUD functionality with history tracking.
+- **Validation & Error Handling:** Ensures correct and complete build data.
+
+---
+
+## 4. Generate AI Guides
+**Feature Description:**  
+AI-powered personalized strategy guide generation for any build.
+
+**How It Works:**
+- **Intelligent Build Analysis:** Understands stats, equipment, and starting class.
+- **Automated Content Generation:** Creates guides on combat, progression, equipment priorities, and tips.
+- **Build-Specific Recommendations:** Suggests weapon scaling, spell usage, and combat tactics.
+- **Strategy Optimization:** Highlights strengths, weaknesses, and situational advantages.
+- **Universal Compatibility:** Works for any build (personal, community, or preset).
+- **One-Click Generation:** Generates formatted content in seconds.
+- **Integrated with Build System:** Guides automatically link to source builds.
+
+---
+
+## 5. Share & Collaborate
+**Feature Description:**  
+Community-driven sharing with social interaction features.
+
+**How It Works:**
+- **Public/Private Toggle:** Control build visibility.
+- **Community Discovery:** Public builds appear in the main library.
+- **Build Sharing URLs:** Share builds with unique links.
+- **Cross-User Guide Generation:** Any public build can receive AI-generated guides from the community.
+- **Build Attribution:** Clearly show build creators while respecting privacy.
+- **Collaborative Learning:** Study, adapt, and contribute to build strategies.
+- **Social Features:** View, analyze, and gain inspiration from others' creations.
 
 
 **

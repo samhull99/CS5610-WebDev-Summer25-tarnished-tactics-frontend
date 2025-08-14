@@ -15,11 +15,11 @@ const GUIDE_DIFFICULTIES = [
   'Hard'
 ];
 
-function GuideCreator({ onGuideCreated, onCancel, editingGuide = null }) {
+function GuideCreator({ onGuideCreated, onCancel, editingGuide = null, prefilledData = null }) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const isEditing = editingGuide !== null;
+  const isEditing = editingGuide !== null && editingGuide._id; // Only editing if there's an actual _id
   
   const [guideData, setGuideData] = useState({
     title: '',
@@ -36,9 +36,10 @@ function GuideCreator({ onGuideCreated, onCancel, editingGuide = null }) {
 
   const [tagInput, setTagInput] = useState('');
 
-  // Load existing guide data when editing
+  // Load existing guide data when editing OR prefilled data from AI
   useEffect(() => {
     if (isEditing && editingGuide) {
+      // Editing existing guide
       setGuideData({
         title: editingGuide.title || '',
         description: editingGuide.description || '',
@@ -51,8 +52,22 @@ function GuideCreator({ onGuideCreated, onCancel, editingGuide = null }) {
         images: editingGuide.images || [],
         isPublic: editingGuide.isPublic !== undefined ? editingGuide.isPublic : true
       });
+    } else if (prefilledData) {
+      // Creating new guide with AI-generated data
+      setGuideData({
+        title: prefilledData.title || '',
+        description: prefilledData.description || '',
+        content: prefilledData.content || '',
+        category: prefilledData.category || 'Build Guide',
+        difficulty: prefilledData.difficulty || 'Easy',
+        recommendedLevel: prefilledData.recommendedLevel || '',
+        associatedBuilds: prefilledData.associatedBuilds || [],
+        tags: prefilledData.tags || [],
+        images: prefilledData.images || [],
+        isPublic: prefilledData.isPublic !== undefined ? prefilledData.isPublic : true
+      });
     }
-  }, [isEditing, editingGuide]);
+  }, [isEditing, editingGuide, prefilledData]);
 
   const handleInputChange = (field, value) => {
     setGuideData(prev => ({
@@ -100,13 +115,15 @@ function GuideCreator({ onGuideCreated, onCancel, editingGuide = null }) {
     setError(null);
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       
       const guidePayload = {
         ...guideData,
         userId: user.id,
         recommendedLevel: guideData.recommendedLevel ? parseInt(guideData.recommendedLevel) : null
       };
+
+      console.log("Submitting guide:", { isEditing, guidePayload }); // Debug log
 
       let response;
       if (isEditing) {
@@ -135,6 +152,7 @@ function GuideCreator({ onGuideCreated, onCancel, editingGuide = null }) {
       }
 
       const result = await response.json();
+      console.log("Guide save result:", result); // Debug log
       
       if (onGuideCreated) {
         onGuideCreated(result);
@@ -157,6 +175,7 @@ function GuideCreator({ onGuideCreated, onCancel, editingGuide = null }) {
       }
       
     } catch (err) {
+      console.error("Guide creation error:", err); // Debug log
       setError(err.message);
     } finally {
       setLoading(false);

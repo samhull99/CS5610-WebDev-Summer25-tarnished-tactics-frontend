@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [justSignedIn, setJustSignedIn] = useState(false); // Add this state
 
   // Load user from localStorage on mount
   useEffect(() => {
@@ -78,6 +79,7 @@ export const AuthProvider = ({ children }) => {
       };
       
       setUser(userData);
+      setJustSignedIn(true); // Set flag for new sign-in
       
       // Save user to localStorage
       localStorage.setItem('tarnished_tactics_user', JSON.stringify(userData));
@@ -123,6 +125,7 @@ export const AuthProvider = ({ children }) => {
         window.google.accounts.id.disableAutoSelect();
       }
       setUser(null);
+      setJustSignedIn(false); // Reset flag on sign out
       
       // Remove user from localStorage
       localStorage.removeItem('tarnished_tactics_user');
@@ -133,10 +136,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Add function to clear the flag
+  const clearJustSignedIn = () => {
+    setJustSignedIn(false);
+  };
+
   // Optional: Register/login user in your backend
   const registerOrLoginUser = async (userData) => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || '';
       const response = await fetch(`${API_URL}/api/v1/auth/google`, {
         method: 'POST',
         headers: {
@@ -165,7 +173,9 @@ export const AuthProvider = ({ children }) => {
     isInitialized,
     signIn,
     signOut,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    justSignedIn,        // Add this
+    clearJustSignedIn    // Add this
   };
 
   return (

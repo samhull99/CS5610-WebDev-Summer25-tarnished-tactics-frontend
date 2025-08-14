@@ -19,7 +19,7 @@ function GuideDetailPage() {
   const fetchGuide = async () => {
     setLoading(true);
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const url = `${API_URL}/api/v1/guides/${guideId}`;
       console.log('Fetching guide from:', url);
       
@@ -52,7 +52,7 @@ function GuideDetailPage() {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/guides/${guideId}`, {
         method: 'DELETE',
         headers: {
@@ -197,44 +197,51 @@ function GuideDetailPage() {
 
       {/* Main content */}
       <div className="build-detail-content">
-        {/* Guide Info Section */}
-        <div className="build-info-section">
-          <h1 className="build-title">{guide.title}</h1>
-          
-          <div className="build-meta-large">
-            <span 
-              className="guide-category-large"
-              style={{ backgroundColor: getCategoryColor(guide.category) }}
-            >
-              {guide.category}
-            </span>
-            <span 
-              className="guide-difficulty-large"
-              style={{ backgroundColor: getDifficultyColor(guide.difficulty) }}
-            >
-              {guide.difficulty}
-            </span>
-            {guide.recommendedLevel && (
-              <span className="build-level-large">Level {guide.recommendedLevel}+</span>
-            )}
-            <span className={`visibility-large ${guide.isPublic ? 'public' : 'private'}`}>
-              {guide.isPublic ? '🌐 Public' : '🔒 Private'}
-            </span>
-            <span className={`build-type-large ${guideType.class}`}>
-              {guideType.icon} {guideType.label}
-            </span>
-          </div>
+<div className="guide-info-section">
+  <h1 className="guide-title">{guide.title}</h1>
+  
+  <div className="guide-meta-large">
+    <span 
+      className="guide-category-large"
+      style={{ backgroundColor: getCategoryColor(guide.category) }}
+    >
+      {guide.category}
+    </span>
+    <span 
+      className="guide-difficulty-large"
+      style={{ backgroundColor: getDifficultyColor(guide.difficulty) }}
+    >
+      {guide.difficulty}
+    </span>
+    {guide.recommendedLevel && (
+      <span className="guide-level-large">
+        Level {guide.recommendedLevel}+
+      </span>
+    )}
+    {/* Add AI Generated badge */}
+    {guide.tags && guide.tags.includes('AI Generated') && (
+      <span className="ai-generated-badge-large">
+        🤖 AI Generated
+      </span>
+    )}
+    <span className={`visibility-large ${guide.isPublic ? 'public' : 'private'}`}>
+      {guide.isPublic ? '🌐 Public' : '🔒 Private'}
+    </span>
+    <span className={`guide-type-large ${guideType.class}`}>
+      {guideType.icon} {guideType.label}
+    </span>
+  </div>
 
-          {guide.description && (
-            <div className="build-description-large">
-              <h3>Description</h3>
-              <p>{guide.description}</p>
-            </div>
-          )}
-        </div>
+  {guide.description && (
+    <div className="guide-description-large">
+      <h3>Description</h3>
+      <p>{guide.description}</p>
+    </div>
+  )}
+</div>
 
         {/* Guide Content Section */}
-        <div className="build-section">
+        <div className="guide-section">
           <h2>Guide Content</h2>
           <div className="guide-content-detailed">
             {guide.content.split('\n').map((paragraph, index) => (
@@ -245,7 +252,7 @@ function GuideDetailPage() {
 
         {/* Associated Builds Section */}
         {guide.associatedBuilds && guide.associatedBuilds.length > 0 && (
-          <div className="build-section">
+          <div className="guide-section">
             <h2>Associated Builds</h2>
             <div className="associated-builds">
               <p>This guide references {guide.associatedBuilds.length} build{guide.associatedBuilds.length !== 1 ? 's' : ''}.</p>
@@ -256,7 +263,7 @@ function GuideDetailPage() {
 
         {/* Images Section */}
         {guide.images && guide.images.length > 0 && (
-          <div className="build-section">
+          <div className="guide-section">
             <h2>Images</h2>
             <div className="guide-images">
               {guide.images.map((image, index) => (
@@ -273,7 +280,7 @@ function GuideDetailPage() {
 
         {/* Tags Section */}
         {guide.tags && guide.tags.length > 0 && (
-          <div className="build-section">
+          <div className="guide-section">
             <h2>Tags</h2>
             <div className="tags-large">
               {guide.tags.map(tag => (
@@ -284,8 +291,8 @@ function GuideDetailPage() {
         )}
 
         {/* Footer Info */}
-        <div className="build-detail-footer">
-          <div className="build-dates">
+        <div className="guide-detail-footer">
+          <div className="guide-dates">
             <p><strong>Created:</strong> {new Date(guide.createdAt).toLocaleString()}</p>
             {guide.updatedAt !== guide.createdAt && (
               <p><strong>Last Updated:</strong> {new Date(guide.updatedAt).toLocaleString()}</p>

@@ -17,7 +17,7 @@ function GuidesPage() {
 
   const fetchGuides = async () => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/guides`);
       if (!response.ok) {
         throw new Error('Failed to fetch guides');
@@ -50,7 +50,7 @@ function GuidesPage() {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/guides/${guideId}`, {
         method: 'DELETE',
         headers: {
@@ -242,32 +242,38 @@ function GuidesPage() {
                 </div>
               </div>
 
-              <div className="guide-meta">
-                <span 
-                  className="guide-category"
-                  style={{ backgroundColor: getCategoryColor(guide.category) }}
-                >
-                  {guide.category}
-                </span>
-                <span 
-                  className="guide-difficulty"
-                  style={{ backgroundColor: getDifficultyColor(guide.difficulty) }}
-                >
-                  {guide.difficulty}
-                </span>
-                {guide.recommendedLevel && (
-                  <span className="guide-level">
-                    Level {guide.recommendedLevel}+
-                  </span>
-                )}
-                {/* Show guide type indicator */}
-                {!guide.authorId && (
-                  <span className="build-type preset">📋 Preset</span>
-                )}
-                {guide.authorId && (
-                  <span className="build-type user">👤 User Guide</span>
-                )}
-              </div>
+<div className="guide-meta">
+  <span 
+    className="guide-category"
+    style={{ backgroundColor: getCategoryColor(guide.category) }}
+  >
+    {guide.category}
+  </span>
+  <span 
+    className="guide-difficulty"
+    style={{ backgroundColor: getDifficultyColor(guide.difficulty) }}
+  >
+    {guide.difficulty}
+  </span>
+  {guide.recommendedLevel && (
+    <span className="guide-level">
+      Level {guide.recommendedLevel}+
+    </span>
+  )}
+  {/* Add AI Generated badge */}
+  {guide.tags && guide.tags.includes('AI Generated') && (
+    <span className="ai-generated-badge">
+      🤖 AI Generated
+    </span>
+  )}
+  {/* Show guide type indicator */}
+  {!guide.authorId && (
+    <span className="build-type preset">📋 Preset</span>
+  )}
+  {guide.authorId && (
+    <span className="build-type user">👤 User Guide</span>
+  )}
+</div>
 
               <div className="guide-description">
                 {truncateContent(guide.description)}
@@ -280,18 +286,21 @@ function GuidesPage() {
                 </div>
               )}
 
-              {guide.tags && guide.tags.length > 0 && (
-                <div className="guide-tags">
-                  {guide.tags.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="tag">
-                      {tag}
-                    </span>
-                  ))}
-                  {guide.tags.length > 3 && (
-                    <span className="tag">+{guide.tags.length - 3} more</span>
-                  )}
-                </div>
-              )}
+{guide.tags && guide.tags.length > 0 && (
+  <div className="guide-tags">
+    {guide.tags.slice(0, 3).map((tag, index) => (
+      <span 
+        key={index} 
+        className={`tag ${tag === 'AI Generated' ? 'ai-generated' : ''}`}
+      >
+        {tag === 'AI Generated' ? '🤖 AI Generated' : tag}
+      </span>
+    ))}
+    {guide.tags.length > 3 && (
+      <span className="tag">+{guide.tags.length - 3} more</span>
+    )}
+  </div>
+)}
 
               {guide.associatedBuilds && guide.associatedBuilds.length > 0 && (
                 <div className="guide-builds">

@@ -19,7 +19,7 @@ function BuildsPage() {
   const fetchBuilds = async () => {
     setLoading(true);
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/builds`);
       
       if (!response.ok) {
@@ -54,7 +54,7 @@ function BuildsPage() {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/builds/${buildId}`, {
         method: 'DELETE',
         headers: {
@@ -193,7 +193,7 @@ function BuildsPage() {
                   
                   <div className="build-meta">
                     <span className="build-class">{build.class}</span>
-                    <span className="build-level">Level {build.level}</span>
+<span className="build-level">Level {build.level}</span>
                     <span className={`visibility ${build.isPublic ? 'public' : 'private'}`}>
                       {build.isPublic ? '🌐 Public' : '🔒 Private'}
                     </span>
@@ -205,7 +205,6 @@ function BuildsPage() {
                       <span className="build-type user">👤 User Build</span>
                     )}
                   </div>
-
                   <p className="build-description">{build.description}</p>
                   
                   <div className="build-stats-summary">

@@ -23,7 +23,7 @@ function MyBuildsPage() {
     
     setLoading(true);
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/builds/user/${user.id}`);
       
       if (!response.ok) {
@@ -56,7 +56,7 @@ function MyBuildsPage() {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/builds/${buildId}`, {
         method: 'DELETE',
         headers: {

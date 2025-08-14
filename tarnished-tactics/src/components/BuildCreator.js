@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 
+
 const STARTING_CLASSES = [
   'Vagabond', 'Warrior', 'Hero', 'Bandit', 'Astrologer', 
   'Prophet', 'Samurai', 'Prisoner', 'Confessor', 'Wretch'
@@ -30,14 +31,14 @@ function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
     class: 'Vagabond',
     level: 10,
     stats: {
-      vigor: 10,
-      mind: 10,
-      endurance: 10,
-      strength: 10,
-      dexterity: 10,
-      intelligence: 10,
-      faith: 10,
-      arcane: 10
+      vigor: '',
+      mind: '',
+      endurance: '',
+      strength: '',
+      dexterity: '',
+      intelligence: '',
+      faith: '',
+      arcane: ''
     },
     equipment: { ...EQUIPMENT_SLOTS },
     spells: [],
@@ -56,14 +57,14 @@ function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
         class: editingBuild.class || 'Vagabond',
         level: editingBuild.level || 10,
         stats: {
-          vigor: editingBuild.stats?.vigor || 10,
-          mind: editingBuild.stats?.mind || 10,
-          endurance: editingBuild.stats?.endurance || 10,
-          strength: editingBuild.stats?.strength || 10,
-          dexterity: editingBuild.stats?.dexterity || 10,
-          intelligence: editingBuild.stats?.intelligence || 10,
-          faith: editingBuild.stats?.faith || 10,
-          arcane: editingBuild.stats?.arcane || 10
+          vigor: editingBuild.stats?.vigor || '',
+          mind: editingBuild.stats?.mind || '',
+          endurance: editingBuild.stats?.endurance || '',
+          strength: editingBuild.stats?.strength || '',
+          dexterity: editingBuild.stats?.dexterity || '',
+          intelligence: editingBuild.stats?.intelligence || '',
+          faith: editingBuild.stats?.faith || '',
+          arcane: editingBuild.stats?.arcane || ''
         },
         equipment: {
           rightHand: editingBuild.equipment?.rightHand || [],
@@ -91,14 +92,25 @@ function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
   };
 
   const handleStatChange = (stat, value) => {
-    const numValue = Math.max(1, Math.min(99, parseInt(value) || 1));
-    setBuildData(prev => ({
-      ...prev,
-      stats: {
-        ...prev.stats,
-        [stat]: numValue
-      }
-    }));
+    // Allow empty string, or parse to number between 0-99
+    if (value === '') {
+      setBuildData(prev => ({
+        ...prev,
+        stats: {
+          ...prev.stats,
+          [stat]: ''
+        }
+      }));
+    } else {
+      const numValue = Math.max(0, Math.min(99, parseInt(value) || 0));
+      setBuildData(prev => ({
+        ...prev,
+        stats: {
+          ...prev.stats,
+          [stat]: numValue
+        }
+      }));
+    }
   };
 
   const handleEquipmentChange = (category, slot, value) => {
@@ -137,9 +149,14 @@ function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
 
   const calculateTotalLevel = () => {
     const baseLevel = 1;
-    const statsSum = Object.values(buildData.stats).reduce((sum, stat) => sum + stat, 0);
-    const baseStats = 80; // Sum of all stats at level 1 for most classes
-    return baseLevel + (statsSum - baseStats);
+    // Treat empty strings as 0 for calculation
+    const statsSum = Object.values(buildData.stats).reduce((sum, stat) => {
+      const numStat = stat === '' ? 0 : parseInt(stat) || 0;
+      return sum + numStat;
+    }, 0);
+    const baseStats = 0;
+    const calculatedLevel = baseLevel + (statsSum - baseStats);
+    return Math.max(1, calculatedLevel);
   };
 
   const handleSubmit = async (e) => {
@@ -159,7 +176,7 @@ function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
     setError(null);
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       
       const buildPayload = {
         ...buildData,
@@ -207,14 +224,14 @@ function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
           class: 'Vagabond',
           level: 10,
           stats: {
-            vigor: 10,
-            mind: 10,
-            endurance: 10,
-            strength: 10,
-            dexterity: 10,
-            intelligence: 10,
-            faith: 10,
-            arcane: 10
+            vigor: 0,
+            mind: 0,
+            endurance: 0,
+            strength: 0,
+            dexterity: 0,
+            intelligence: 0,
+            faith: 0,
+            arcane: 0
           },
           equipment: { ...EQUIPMENT_SLOTS },
           spells: [],
@@ -307,7 +324,7 @@ function BuildCreator({ onBuildCreated, onCancel, editingBuild = null }) {
                 <input
                   type="number"
                   id={stat}
-                  min="1"
+                  min="0"
                   max="99"
                   value={value}
                   onChange={(e) => handleStatChange(stat, e.target.value)}

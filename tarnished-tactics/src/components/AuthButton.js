@@ -4,21 +4,36 @@ import { useAuth } from './AuthContext';
 function AuthButton() {
   const { user, signIn, signOut, loading, isInitialized } = useAuth();
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [componentKey, setComponentKey] = useState(0); // Force re-render
   const googleButtonRef = useRef(null);
+  const previousUserRef = useRef(user);
+
+  // Force component re-render when user signs in
+  useEffect(() => {
+    if (!previousUserRef.current && user && isInitialized) {
+      // Force complete re-render by changing key
+      setComponentKey(prev => prev + 1);
+    }
+    previousUserRef.current = user;
+  }, [user, isInitialized]);
 
   useEffect(() => {
-    // Only render Google button when component is mounted and conditions are met
     if (isInitialized && !user && !loading && window.google && googleButtonRef.current) {
-      renderGoogleButton();
+      // Aggressive cleanup before rendering
+      if (window.google?.accounts?.id?.cancel) {
+        window.google.accounts.id.cancel();
+      }
+      
+      setTimeout(() => {
+        renderGoogleButton();
+      }, 50);
     }
-  }, [isInitialized, user, loading]);
+  }, [isInitialized, user, loading, componentKey]);
 
   const renderGoogleButton = () => {
     if (googleButtonRef.current && window.google) {
-      // Clear any existing button
       googleButtonRef.current.innerHTML = '';
-     
-      // Render the new Google Identity Services button
+      
       window.google.accounts.id.renderButton(
         googleButtonRef.current,
         {
@@ -32,6 +47,7 @@ function AuthButton() {
     }
   };
 
+  // Rest of your component stays the same...
   const handleManualSignIn = () => {
     setIsSigningIn(true);
     try {
@@ -39,10 +55,12 @@ function AuthButton() {
     } catch (error) {
       console.error('Sign in failed:', error);
     } finally {
-      // Reset after a short delay
       setTimeout(() => setIsSigningIn(false), 2000);
     }
   };
+
+console.log('User object:', user);
+console.log('User picture URL:', user?.picture);
 
   const handleSignOut = async () => {
     try {
@@ -52,21 +70,21 @@ function AuthButton() {
     }
   };
 
-  // Don't render anything while loading
   if (loading || !isInitialized) {
     return <div className="auth-loading">Loading...</div>;
   }
 
-  // Show user info and sign out button when signed in
   if (user) {
     return (
-      <div className="auth-container">
+      <div className="auth-container" key={`auth-${componentKey}`}>
         <div className="user-info">
           <img
-            src={user.picture}
-            alt={user.name}
-            className="user-avatar"
-          />
+  src={user.picture}
+  alt={user.name}
+  className="user-avatar"
+  referrerPolicy="no-referrer"
+  crossOrigin="anonymous"
+/>
           <span className="user-name">{user.name}</span>
         </div>
         <button onClick={handleSignOut} className="auth-button sign-out">
@@ -76,13 +94,9 @@ function AuthButton() {
     );
   }
 
-  // Show sign-in options when not signed in
   return (
-    <div className="sign-in-container">
-      {/* Google's rendered button */}
-      <div ref={googleButtonRef} className="google-signin-button" />
-     
-      {/* Fallback manual button */}
+    <div className="sign-in-container" key={`signin-${componentKey}`}>
+      {!user && <div ref={googleButtonRef} className="google-signin-button" />}
       {(!window.google || isSigningIn) && (
         <button
           onClick={handleManualSignIn}

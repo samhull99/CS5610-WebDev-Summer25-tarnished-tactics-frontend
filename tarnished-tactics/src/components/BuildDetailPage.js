@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import BuildCreator from './BuildCreator';
+import GuideCreator from './GuideCreator';
 
 function BuildDetailPage() {
   const { buildId } = useParams();
@@ -11,38 +12,112 @@ function BuildDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
+  
+  // Add these new states for guide generation
+  const [showGuideCreator, setShowGuideCreator] = useState(false);
+  const [generatingGuide, setGeneratingGuide] = useState(false);
+  const [generatedGuideData, setGeneratedGuideData] = useState(null);
 
   useEffect(() => {
     fetchBuild();
   }, [buildId]);
 
-  const fetchBuild = async () => {
-    setLoading(true);
-    try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-      const url = `${API_URL}/api/v1/builds/${buildId}`;
-      console.log('Fetching build from:', url); // Debug log
-      
-      const response = await fetch(url);
-      
-      console.log('Response status:', response.status); // Debug log
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.log('Error response:', errorText); // Debug log
-        throw new Error(`Build not found: ${response.status} - ${errorText}`);
-      }
-      
-      const buildData = await response.json();
-      console.log('Build data received:', buildData); // Debug log
-      setBuild(buildData);
-    } catch (err) {
-      console.error('Fetch error:', err); // Debug log
-      setError(err.message);
-    } finally {
-      setLoading(false);
+// Replace your fetchBuild function with this debug version
+
+const fetchBuild = async () => {
+  setLoading(true);
+  console.log("🔍 Fetching build with ID:", buildId);
+  
+  try {
+    const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
+    const url = `${API_URL}/api/v1/builds/${buildId}`;
+    console.log('📡 Fetching build from:', url);
+    
+    const response = await fetch(url);
+    console.log('📨 Build fetch response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Build fetch error response:', errorText);
+      throw new Error(`Build not found: ${response.status} - ${errorText}`);
     }
-  };
+    
+    const buildData = await response.json();
+    console.log('✅ Build data received:', buildData);
+    setBuild(buildData);
+  } catch (err) {
+    console.error('❌ Build fetch error:', err);
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Add this debug version to your handleGenerateGuide function in BuildDetailPage
+
+const handleGenerateGuide = async () => {
+  if (!user || !build) return;
+  
+  console.log("🚀 Starting guide generation...");
+  console.log("Build ID:", buildId);
+  console.log("User ID:", user.id);
+  console.log("Build object:", build);
+  
+  setGeneratingGuide(true);
+  setError(null);
+
+  try {
+    const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
+    const url = `${API_URL}/api/v1/builds/${buildId}/generate-guide`;
+    
+    console.log("🌐 Making request to:", url);
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: user.id })
+    });
+
+    console.log("📨 Response status:", response.status);
+    console.log("📨 Response headers:", Object.fromEntries(response.headers.entries()));
+
+    const responseText = await response.text(); // Get as text first
+    console.log("📄 Raw response:", responseText);
+
+    if (!response.ok) {
+      let errorMessage;
+      try {
+        const errorData = JSON.parse(responseText);
+        errorMessage = errorData.error || 'Failed to generate guide';
+      } catch (parseError) {
+        errorMessage = `Server error: ${response.status} - ${responseText}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    let result;
+    try {
+      result = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("❌ Failed to parse response as JSON:", parseError);
+      throw new Error("Invalid response format from server");
+    }
+
+    console.log("✅ Guide generated successfully:", result);
+    
+    // Store the generated guide data and show the creator
+    setGeneratedGuideData(result.guideData);
+    setShowGuideCreator(true);
+    
+  } catch (err) {
+    console.error("❌ Guide generation error:", err);
+    setError(err.message);
+  } finally {
+    setGeneratingGuide(false);
+  }
+};
 
   const handleDeleteBuild = async () => {
     if (!user || !build) return;
@@ -52,7 +127,7 @@ function BuildDetailPage() {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const API_URL = process.env.REACT_APP_API_URL || 'https://tarnished-tactics-backend.uc.r.appspot.com';
       const response = await fetch(`${API_URL}/api/v1/builds/${buildId}`, {
         method: 'DELETE',
         headers: {
@@ -65,7 +140,6 @@ function BuildDetailPage() {
         throw new Error('Failed to delete build');
       }
 
-      // Redirect back to builds page after deletion
       navigate('/builds');
     } catch (err) {
       setError(err.message);
@@ -78,7 +152,17 @@ function BuildDetailPage() {
 
   const handleBuildUpdated = (updatedBuild) => {
     setShowEditForm(false);
-    fetchBuild(); // Refresh the build data
+    fetchBuild();
+  };
+
+  // Add this function to handle guide creation completion
+  const handleGuideCreated = (newGuide) => {
+    setShowGuideCreator(false);
+    setGeneratedGuideData(null);
+    // Optionally navigate to the new guide
+    if (newGuide && newGuide.id) {
+      navigate(`/guides/${newGuide.id}`);
+    }
   };
 
   const isOwner = () => {
@@ -131,6 +215,23 @@ function BuildDetailPage() {
     );
   }
 
+  // If showing guide creator, show GuideCreator with pre-filled data
+  if (showGuideCreator) {
+    return (
+      <div className="build-detail-page">
+        <GuideCreator 
+          onGuideCreated={handleGuideCreated}
+          onCancel={() => {
+            setShowGuideCreator(false);
+            setGeneratedGuideData(null);
+          }}
+        prefilledData={generatedGuideData} // Use prefilledData instead of editingGuide
+        editingGuide={null} // This is a new guide, not editing
+        />
+      </div>
+    );
+  }
+
   const buildType = getBuildType();
 
   return (
@@ -142,6 +243,26 @@ function BuildDetailPage() {
         </div>
         
         <div className="build-detail-actions">
+          {/* Add Generate Guide button for authenticated users */}
+          {isAuthenticated && (
+            <button 
+              onClick={handleGenerateGuide}
+              disabled={generatingGuide}
+              className={`generate-guide-button ${generatingGuide ? 'generating-guide' : ''}`}
+              title="Generate AI guide from this build"
+            >
+              {generatingGuide ? (
+                <>
+                  🤖 Generating...
+                </>
+              ) : (
+                <>
+                  🤖 Generate Guide
+                </>
+              )}
+            </button>
+          )}
+          
           {isOwner() && (
             <>
               <button 
@@ -162,6 +283,14 @@ function BuildDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Show error message if guide generation fails */}
+      {error && (
+        <div className="error-message">
+          {error}
+          <button onClick={() => setError(null)}>×</button>
+        </div>
+      )}
 
       {/* Main content */}
       <div className="build-detail-content">
